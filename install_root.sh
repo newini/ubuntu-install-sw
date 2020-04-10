@@ -2,6 +2,7 @@
 #
 # Install ROOT CERN for Ubuntu
 
+sudo su || exit 1
 
 # Yum update/upgrade
 sudo apt update
@@ -21,7 +22,7 @@ libgsl0-dev libqt4-dev
 
 # Download ROOT
 cd /opt
-mkdir root && cd root
+mkdir -p root && cd root
 wget https://root.cern/download/root_v6.20.04.source.tar.g
 tar zxf root_v6.20.04.source.tar.gz
 mv root-6.20.04/ 6.20.04
@@ -29,4 +30,19 @@ mv root-6.20.04/ 6.20.04
 
 # Build
 mkdir 6.20.04-build && cd 6.20.04-build/
+cmake \
+    -DCMAKE_INSTALL_PREFIX=/opt/root/6.20.04-install-python3 \
+    -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+    ../6.20.04 
+cmake --build .
+make install
 
+
+# Clean
+cd ..
+rm -f root_v6.20.04.source.tar.gz
+exit
+
+
+# Add to bashrc
+echo "source /opt/root/6.20.04-install-python3/bin/thisroot.sh" >> ~/.bashrc
